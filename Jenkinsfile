@@ -24,13 +24,13 @@ pipeline {
         }
                 stage('Clean Directories') {
             steps {
-                sh 'rm -rf public migrations prisma node_modules .git'
+                sh 'rm -rf public migrations prisma node_modules'
                 sh 'ls'
             }
         }
         stage('Archive') {
             steps {
-                sh 'zip -r ${CaminhoPacote} .'
+                sh 'zip -r ${CaminhoPacote} . --exclude .git/*'
             }
         }
         stage('SCA') {
