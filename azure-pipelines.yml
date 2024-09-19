@@ -5,8 +5,7 @@ pool:
   vmImage: ubuntu-latest
 
 variables:
-  veracodeAppProfile: LabRafa.$(Build.DefinitionName)
-  caminhoPacote: $(Build.ArtifactStagingDirectory)/$(Build.BuildId).zip
+  - group: 'Veracode Api Key'
 
 steps:
 - task: CmdLine@2
@@ -70,16 +69,16 @@ steps:
     failBuildOnPolicyFail: false
   displayName: 'Veracode SAST'
 
-- task: Veracode Flaw Importer@3
-  inputs:
-    ConnectionDetailsSelection: 'Credentials'
-    apiId: '$(APIID)'
-    apiKey: '$(APIKEY)'
-    veracodeAppProfile: '$(veracodeAppProfile)'
-    sandboxName: 
-    importType: 'All Flaws'
-    workItemType: 'Issue'
-    area: '$(system.teamProject)'
-    addCustomTag: '$(build.buildNumber)'
-    flawImportLimit: '1000'
-  displayName: 'Veracode importando falhas'
+# - task: Veracode Flaw Importer@3
+#   inputs:
+#     ConnectionDetailsSelection: 'Credentials'
+#     apiId: '$(APIID)'
+#     apiKey: '$(APIKEY)'
+#     veracodeAppProfile: '$(veracodeAppProfile)'
+#     sandboxName: 
+#     importType: 'All Flaws'
+#     workItemType: 'Issue'
+#     area: '$(system.teamProject)'
+#     addCustomTag: '$(build.buildNumber)'
+#     flawImportLimit: '1000'
+#   displayName: 'Veracode importando falhas'
