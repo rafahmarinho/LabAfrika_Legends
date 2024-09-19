@@ -22,6 +22,12 @@ pipeline {
                 git url: 'git@github.com:rafahmarinho/LabAfrika_Legends.git', credentialsId: 'github-credentials-rafa-ssh'
             }
         }
+                stage('Clean Directories') {
+            steps {
+                sh 'rm -rf public migrations prisma node_modules'
+                sh 'ls'
+            }
+        }
         stage('Archive') {
             steps {
                 sh 'zip -r ${CaminhoPacote} .'
