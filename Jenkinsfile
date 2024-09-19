@@ -48,7 +48,7 @@ pipeline {
             steps {
                 sh 'curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip'
                 sh 'unzip -o pipeline-scan-LATEST.zip'
-                sh 'java -jar pipeline-scan.jar -vid ${VeracodeID} -vkey ${VeracodeKey} -f ${CaminhoPacote}' returnStatus: true
+                sh script: 'java -jar pipeline-scan.jar -vid ${VeracodeID} -vkey ${VeracodeKey} -f ${CaminhoPacote}', returnStatus: true
             }
         }
     }
