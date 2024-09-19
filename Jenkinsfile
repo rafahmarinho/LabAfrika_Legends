@@ -19,7 +19,7 @@ pipeline {
         }
         stage('Git Clone') {
             steps {
-                git "https://github.com/rafahmarinho/LabAfrika_Legends"
+                git url: 'git@github.com:rafahmarinho/LabAfrika_Legends.git', credentialsId: 'github-credentials-rafa-ssh'
             }
         }
         stage('Archive') {
