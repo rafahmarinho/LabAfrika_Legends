@@ -7,13 +7,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
-      - name: Use Node.js
-        uses: actions/setup-node@v2
-        with:
-          node-version: '20.x'
-      - name: Install dependencies
-        run: npm install
+      # - uses: actions/checkout@v2
+      # - name: Use Node.js
+      #   uses: actions/setup-node@v2
+      #   with:
+      #     node-version: '20.x'
+      # - name: Install dependencies
+      #   run: npm install
+      - name: Clean Directories
+        run: |
+          rm -rf public migrations prisma node_modules
       - name: Empacotamento dos arquivos
         uses: thedoctor0/zip-release@master
         with:
@@ -60,7 +63,7 @@ jobs:
 
   Veracode_PipelineScan:
     runs-on: ubuntu-latest
-    needs: build
+    needs: Veracode_SAST
     steps:
       - name: Download Artefato
         uses: actions/download-artifact@v4
