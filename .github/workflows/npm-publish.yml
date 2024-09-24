@@ -38,30 +38,7 @@ jobs:
   #       run: |
   #         curl -sSL 'https://download.sourceclear.com/ci.sh' | bash -s – scan --update-advisor --pull-request --allow-dirty
 
-  # Veracode_SAST:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #     - name: Download Artefato
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: pacoteVeracode
-  #     - uses: veracode/veracode-uploadandscan-action@master # Faz a analise da Veracode
-  #       env:
-  #         VID: ${{ secrets.VID }} # Lembrar de criar as credenciais no Secrets
-  #         VKEY: ${{ secrets.VKEY }}
-  #         AppName: Github Actions - ${{ github.repository }}
-  #       with:
-  #         vid: '${{ secrets.VID }}'
-  #         vkey: '${{ secrets.VKEY }}'
-  #         criticality: 'VeryHigh'
-  #         appname: '$AppName'
-  #         createsandbox: true
-  #         filepath: 'veracode.zip'
-  #         deleteIncompleteScan: false
-  #         version: ${{ github.run_id }}
-
-  Veracode_SAST:
+  Veracode_SAST_ACTION:
     runs-on: windows-latest
     needs: build
     steps:
@@ -69,19 +46,42 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: pacoteVeracode
-      - name: Baixar Veracode API Wrapper
-        run: |
-          curl.exe -o veracode-wrapper.jar https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/24.7.14.0/vosp-api-wrappers-java-24.7.14.0.jar
-      - name: Executar Upload e Scan SAST
-        run: |
-          java -jar veracode-wrapper.jar `
-          -vid ${{ secrets.VID }} `
-          -vkey ${{ secrets.VKEY }} `
-          -action uploadandscan `
-          -appname "Github Actions 2 - ${{ github.repository }}" `
-          -createprofile true `
-          -version ${{ github.run_id }} `
-          -filepath veracode.zip
+      - uses: veracode/veracode-uploadandscan-action@master # Faz a analise da Veracode
+        env:
+          VID: ${{ secrets.VID }} # Lembrar de criar as credenciais no Secrets
+          VKEY: ${{ secrets.VKEY }}
+          AppName: Github Actions - ${{ github.repository }}
+        with:
+          vid: '${{ secrets.VID }}'
+          vkey: '${{ secrets.VKEY }}'
+          criticality: 'VeryHigh'
+          appname: '$AppName'
+          createsandbox: true
+          filepath: 'veracode.zip'
+          deleteIncompleteScan: false
+          version: ${{ github.run_id }}
+
+  # Veracode_SAST_WRAPPER:
+  #   runs-on: windows-latest
+  #   needs: build
+  #   steps:
+  #     - name: Download Artefato
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: pacoteVeracode
+  #     - name: Baixar Veracode API Wrapper
+  #       run: |
+  #         curl.exe -o veracode-wrapper.jar https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/24.7.14.0/vosp-api-wrappers-java-24.7.14.0.jar
+  #     - name: Executar Upload e Scan SAST
+  #       run: |
+  #         java -jar veracode-wrapper.jar `
+  #         -vid ${{ secrets.VID }} `
+  #         -vkey ${{ secrets.VKEY }} `
+  #         -action uploadandscan `
+  #         -appname "Github Actions 2 - ${{ github.repository }}" `
+  #         -createprofile true `
+  #         -version ${{ github.run_id }} `
+  #         -filepath veracode.zip
 
   # Veracode_PipelineScan:
   #   runs-on: ubuntu-latest
