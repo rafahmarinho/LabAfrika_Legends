@@ -8,12 +8,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      # - name: Use Node.js
-      #   uses: actions/setup-node@v2
-      #   with:
-      #     node-version: '20.x'
-      # - name: Install dependencies
-      #   run: npm install
+      - name: Use Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: '20.x'
+      - name: Install dependencies
+        run: npm install
       - name: Clean Directories
         run: |
           rm -rf public migrations prisma node_modules
@@ -28,15 +28,15 @@ jobs:
           name: pacoteVeracode
           path: veracode.zip
   
-  # Veracode_SCA:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - uses: actions/checkout@v2
-  #     - name: Veracode SCA
-  #       env:
-  #         SRCCLR_API_TOKEN: ${{ secrets.SRCCLR_API_TOKEN }} # Lembrar de criar as credenciais no Secrets
-  #       run: |
-  #         curl -sSL 'https://download.sourceclear.com/ci.sh' | bash -s – scan --update-advisor --pull-request --allow-dirty
+  Veracode_SCA:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Veracode SCA
+        env:
+          SRCCLR_API_TOKEN: ${{ secrets.SRCCLR_API_TOKEN }} # Lembrar de criar as credenciais no Secrets
+        run: |
+          curl -sSL 'https://download.sourceclear.com/ci.sh' | bash -s – scan --update-advisor --pull-request --allow-dirty
 
   Veracode_SAST_ACTION:
     runs-on: windows-latest
@@ -61,42 +61,42 @@ jobs:
           deleteIncompleteScan: false
           version: ${{ github.run_id }}
 
-  # Veracode_SAST_WRAPPER:
-  #   runs-on: windows-latest
-  #   needs: build
-  #   steps:
-  #     - name: Download Artefato
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: pacoteVeracode
-  #     - name: Baixar Veracode API Wrapper
-  #       run: |
-  #         curl.exe -o veracode-wrapper.jar https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/24.7.14.0/vosp-api-wrappers-java-24.7.14.0.jar
-  #     - name: Executar Upload e Scan SAST
-  #       run: |
-  #         java -jar veracode-wrapper.jar `
-  #         -vid ${{ secrets.VID }} `
-  #         -vkey ${{ secrets.VKEY }} `
-  #         -action uploadandscan `
-  #         -appname "Github Actions 2 - ${{ github.repository }}" `
-  #         -createprofile true `
-  #         -version ${{ github.run_id }} `
-  #         -filepath veracode.zip
+  Veracode_SAST_WRAPPER:
+    runs-on: windows-latest
+    needs: build
+    steps:
+      - name: Download Artefato
+        uses: actions/download-artifact@v4
+        with:
+          name: pacoteVeracode
+      - name: Baixar Veracode API Wrapper
+        run: |
+          curl.exe -o veracode-wrapper.jar https://repo1.maven.org/maven2/com/veracode/vosp/api/wrappers/vosp-api-wrappers-java/24.7.14.0/vosp-api-wrappers-java-24.7.14.0.jar
+      - name: Executar Upload e Scan SAST
+        run: |
+          java -jar veracode-wrapper.jar `
+          -vid ${{ secrets.VID }} `
+          -vkey ${{ secrets.VKEY }} `
+          -action uploadandscan `
+          -appname "Github Actions 2 - ${{ github.repository }}" `
+          -createprofile true `
+          -version ${{ github.run_id }} `
+          -filepath veracode.zip
 
-  # Veracode_PipelineScan:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #     - name: Download Artefato
-  #       uses: actions/download-artifact@v4
-  #       with:
-  #         name: pacoteVeracode
-  #     - name: Veracode Pipeline Scan
-  #       env:
-  #         VID: ${{ secrets.VID }} # Lembrar de criar as credenciais no Secrets
-  #         VKEY: ${{ secrets.VKEY }}
-  #         CaminhoArquivo: './veracode.zip'
-  #       run: |
-  #         curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
-  #         unzip pipeline-scan-LATEST.zip
-  #         java -jar pipeline-scan.jar -vid $VID -vkey $VKEY -f $CaminhoArquivo
+  Veracode_PipelineScan:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Download Artefato
+        uses: actions/download-artifact@v4
+        with:
+          name: pacoteVeracode
+      - name: Veracode Pipeline Scan
+        env:
+          VID: ${{ secrets.VID }} # Lembrar de criar as credenciais no Secrets
+          VKEY: ${{ secrets.VKEY }}
+          CaminhoArquivo: './veracode.zip'
+        run: |
+          curl -sSO https://downloads.veracode.com/securityscan/pipeline-scan-LATEST.zip
+          unzip pipeline-scan-LATEST.zip
+          java -jar pipeline-scan.jar -vid $VID -vkey $VKEY -f $CaminhoArquivo
