@@ -40,7 +40,7 @@ jobs:
     needs: build
     steps:
       - name: Download Artefato
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: pacoteVeracode
       - uses: veracode/veracode-uploadandscan-action@master # Faz a analise da Veracode
@@ -63,7 +63,7 @@ jobs:
     needs: build
     steps:
       - name: Download Artefato
-        uses: actions/download-artifact@v2
+        uses: actions/download-artifact@v4
         with:
           name: pacoteVeracode
       - name: Veracode Pipeline Scan
