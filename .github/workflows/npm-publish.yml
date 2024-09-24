@@ -7,9 +7,9 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
       - name: Use Node.js
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@master
         with:
           node-version: '20.x'
       - name: Install dependencies
@@ -23,7 +23,7 @@ jobs:
           filename: 'veracode.zip'
           path: ./src
       - name: Publicando Artefato
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@master
         with:
           name: pacoteVeracode
           path: veracode.zip
@@ -31,7 +31,7 @@ jobs:
   Veracode_SCA:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@master
       - name: Veracode SCA
         env:
           SRCCLR_API_TOKEN: ${{ secrets.SRCCLR_API_TOKEN }} # Lembrar de criar as credenciais no Secrets
@@ -39,11 +39,11 @@ jobs:
           curl -sSL 'https://download.sourceclear.com/ci.sh' | bash -s – scan --update-advisor --pull-request --allow-dirty
 
   Veracode_SAST_ACTION:
-    runs-on: windows-latest
+    runs-on: ubuntu-latest
     needs: build
     steps:
       - name: Download Artefato
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@master
         with:
           name: pacoteVeracode
       - uses: veracode/veracode-uploadandscan-action@master # Faz a analise da Veracode
@@ -66,7 +66,7 @@ jobs:
     needs: build
     steps:
       - name: Download Artefato
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@master
         with:
           name: pacoteVeracode
       - name: Baixar Veracode API Wrapper
@@ -88,7 +88,7 @@ jobs:
     needs: build
     steps:
       - name: Download Artefato
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@master
         with:
           name: pacoteVeracode
       - name: Veracode Pipeline Scan
