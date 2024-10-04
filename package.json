@@ -21,7 +21,7 @@
     "bcrypt": "^5.1.1",
     "chakra-react-select": "^4.7.6",
     "dotenv": "^16.3.1",
-    "framer-motion": "^10.15.0",
+    "framer-motion": "^10.18.0",
     "fs": "^0.0.1-security",
     "js-cookie": "^3.0.5",
     "jsonwebtoken": "^9.0.2",
